@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
-  Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle,
-  Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Input, Label, Row, Col
+  Card, CardImg, CardText, CardBody, CardTitle,
+  Button, Modal, ModalHeader, ModalBody, Label, Row, Col
 } from 'reactstrap';
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -31,29 +31,8 @@ function RenderDish({ dish }) {
     );
   }
 }
-function RenderComments({ comments }) {
-  class CommentForm extends Component {
-    constructor(props) {
-      super(props);
-      console.log("props" + props);
-      this.state = {
-        isNavOpen: false,
-        isModalOpen: false
 
-      };
-
-    }
-    render() {
-      return (
-
-        <div>
-
-        </div>
-
-      );
-    }
-  }
-
+function RenderComments({ comments, addComment, dishId }) {
   if (comments != null) {
     return (
       <div>
@@ -67,11 +46,13 @@ function RenderComments({ comments }) {
                   {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comments[i].date)))}
                 </li>
               </ul>
-              <CommentForm />
+
+
+
             </div>
           );
         })}
-        <SubmitComment />
+        <CommentForm comments={comments} dishId={dishId} addComment={addComment} />
 
       </div>
     );
@@ -84,13 +65,12 @@ function RenderComments({ comments }) {
   }
 
 }
-class SubmitComment extends Component {
+class CommentForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isNavOpen: false,
-      isModalOpen: false,
-      dish: props.dish,
+      isModalOpen: false
 
     };
     this.toggleNav = this.toggleNav.bind(this);
@@ -110,8 +90,8 @@ class SubmitComment extends Component {
   }
   handleSubmit(values) {
     this.toggleModal();
-    console.log('Current State is: ' + JSON.stringify(values));
-    alert('Current State is: ' + JSON.stringify(values));
+    this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+    console.log("props =" + JSON.stringify(this.props));
   }
   render() {
     return (
@@ -127,7 +107,7 @@ class SubmitComment extends Component {
                 <Label htmlFor="Rating" md={12} >Rating</Label>
                 <Col md={12}>
                   <Control.select model=".rating" id="rating" className="form-control">
-                    <option selected value="1">1</option>
+                    <option select value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
@@ -179,6 +159,7 @@ class SubmitComment extends Component {
 const DishDetail = (props) => {
   const dish = props.dish;
 
+
   if (dish != null) {
     return (
       <div className="container">
@@ -197,7 +178,12 @@ const DishDetail = (props) => {
             <RenderDish dish={props.dish} />
           </div>
           <div className="col-12 col-md-5 m-1">
-            <RenderComments comments={props.comments} />
+
+            <RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} />
+
+
+
+
 
           </div>
         </div>
