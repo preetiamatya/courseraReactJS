@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Main from './components/MainComponent';
-import DishDetail from './components/DishdetailComponent';
+import DishDetail from './components/DishDetailComponent';
 import './App.css';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
